@@ -35,9 +35,11 @@
 #ifndef IMAGE_TRANSPORT_CAMERA_PUBLISHER_H
 #define IMAGE_TRANSPORT_CAMERA_PUBLISHER_H
 
-#include <ros/ros.h>
-#include <sensor_msgs/Image.h>
-#include <sensor_msgs/CameraInfo.h>
+#include <rclcpp/macros.hpp>
+
+#include <sensor_msgs/msg/image.hpp>
+#include <sensor_msgs/msg/camera_info.hpp>
+
 #include "image_transport/single_subscriber_publisher.h"
 
 namespace image_transport {
@@ -122,8 +124,8 @@ private:
                   const VoidPtr& tracked_object, bool latch);
 
   struct Impl;
-  typedef boost::shared_ptr<Impl> ImplPtr;
-  typedef boost::weak_ptr<Impl> ImplWPtr;
+
+  RCLCPP_SMART_PTR_DEFINITIONS(Impl);
 
   ImplPtr impl_;
 
