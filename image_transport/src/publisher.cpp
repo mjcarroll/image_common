@@ -1,13 +1,13 @@
 /*********************************************************************
 * Software License Agreement (BSD License)
-* 
+*
 *  Copyright (c) 2009, Willow Garage, Inc.
 *  All rights reserved.
-* 
+*
 *  Redistribution and use in source and binary forms, with or without
 *  modification, are permitted provided that the following conditions
 *  are met:
-* 
+*
 *   * Redistributions of source code must retain the above copyright
 *     notice, this list of conditions and the following disclaimer.
 *   * Redistributions in binary form must reproduce the above
@@ -17,7 +17,7 @@
 *   * Neither the name of the Willow Garage nor the names of its
 *     contributors may be used to endorse or promote products derived
 *     from this software without specific prior written permission.
-* 
+*
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -69,7 +69,7 @@ struct Publisher::Impl
   {
     return !unadvertised_;
   }
-  
+
   void shutdown()
   {
     if (!unadvertised_) {
@@ -88,7 +88,7 @@ struct Publisher::Impl
                                   plugin_pub.publish_fn_);
     user_cb(ssp);
   }
-  
+
   std::string base_topic_;
   PubLoaderPtr loader_;
   std::vector<boost::shared_ptr<PublisherPlugin> > publishers_;
@@ -100,7 +100,7 @@ struct Publisher::Impl
 Publisher::Publisher(ros::NodeHandle& nh, const std::string& base_topic, uint32_t queue_size,
                      const SubscriberStatusCallback& connect_cb,
                      const SubscriberStatusCallback& disconnect_cb,
-                     const ros::VoidPtr& tracked_object, bool latch,
+                     const VoidPtr& tracked_object, bool latch,
                      const PubLoaderPtr& loader)
   : impl_(new Impl)
 {
@@ -159,7 +159,7 @@ void Publisher::publish(const sensor_msgs::Image& message) const
     ROS_ASSERT_MSG(false, "Call to publish() on an invalid image_transport::Publisher");
     return;
   }
-  
+
   BOOST_FOREACH(const boost::shared_ptr<PublisherPlugin>& pub, impl_->publishers_) {
     if (pub->getNumSubscribers() > 0)
       pub->publish(message);
@@ -172,7 +172,7 @@ void Publisher::publish(const sensor_msgs::ImageConstPtr& message) const
     ROS_ASSERT_MSG(false, "Call to publish() on an invalid image_transport::Publisher");
     return;
   }
-  
+
   BOOST_FOREACH(const boost::shared_ptr<PublisherPlugin>& pub, impl_->publishers_) {
     if (pub->getNumSubscribers() > 0)
       pub->publish(message);

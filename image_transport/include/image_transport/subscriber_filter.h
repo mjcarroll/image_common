@@ -108,7 +108,7 @@ public:
     unsubscribe();
 
     sub_ = it.subscribe(base_topic, queue_size, boost::bind(&SubscriberFilter::cb, this, _1),
-                        ros::VoidPtr(), transport_hints);
+                        VoidPtr(), transport_hints);
   }
 
   /**

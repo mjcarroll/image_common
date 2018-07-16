@@ -1,13 +1,13 @@
 /*********************************************************************
 * Software License Agreement (BSD License)
-* 
+*
 *  Copyright (c) 2009, Willow Garage, Inc.
 *  All rights reserved.
-* 
+*
 *  Redistribution and use in source and binary forms, with or without
 *  modification, are permitted provided that the following conditions
 *  are met:
-* 
+*
 *   * Redistributions of source code must retain the above copyright
 *     notice, this list of conditions and the following disclaimer.
 *   * Redistributions in binary form must reproduce the above
@@ -17,7 +17,7 @@
 *   * Neither the name of the Willow Garage nor the names of its
 *     contributors may be used to endorse or promote products derived
 *     from this software without specific prior written permission.
-* 
+*
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -113,18 +113,18 @@ public:
   bool operator==(const CameraPublisher& rhs) const { return impl_ == rhs.impl_; }
 
 private:
-  CameraPublisher(ImageTransport& image_it, ros::NodeHandle& info_nh,
+  CameraPublisher(ImageTransport& image_it, NodeHandle& info_nh,
                   const std::string& base_topic, uint32_t queue_size,
                   const SubscriberStatusCallback& image_connect_cb,
                   const SubscriberStatusCallback& image_disconnect_cb,
                   const ros::SubscriberStatusCallback& info_connect_cb,
                   const ros::SubscriberStatusCallback& info_disconnect_cb,
-                  const ros::VoidPtr& tracked_object, bool latch);
-  
+                  const VoidPtr& tracked_object, bool latch);
+
   struct Impl;
   typedef boost::shared_ptr<Impl> ImplPtr;
   typedef boost::weak_ptr<Impl> ImplWPtr;
-  
+
   ImplPtr impl_;
 
   friend class ImageTransport;

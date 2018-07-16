@@ -1,13 +1,13 @@
 /*********************************************************************
 * Software License Agreement (BSD License)
-* 
+*
 *  Copyright (c) 2009, Willow Garage, Inc.
 *  All rights reserved.
-* 
+*
 *  Redistribution and use in source and binary forms, with or without
 *  modification, are permitted provided that the following conditions
 *  are met:
-* 
+*
 *   * Redistributions of source code must retain the above copyright
 *     notice, this list of conditions and the following disclaimer.
 *   * Redistributions in binary form must reproduce the above
@@ -17,7 +17,7 @@
 *   * Neither the name of the Willow Garage nor the names of its
 *     contributors may be used to endorse or promote products derived
 *     from this software without specific prior written permission.
-* 
+*
 *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -47,7 +47,7 @@ struct ImageTransport::Impl
   ros::NodeHandle nh_;
   PubLoaderPtr pub_loader_;
   SubLoaderPtr sub_loader_;
-  
+
   Impl(const ros::NodeHandle& nh)
     : nh_(nh),
       pub_loader_( boost::make_shared<PubLoader>("image_transport", "image_transport::PublisherPlugin") ),
@@ -68,20 +68,20 @@ ImageTransport::~ImageTransport()
 Publisher ImageTransport::advertise(const std::string& base_topic, uint32_t queue_size, bool latch)
 {
   return advertise(base_topic, queue_size, SubscriberStatusCallback(),
-                   SubscriberStatusCallback(), ros::VoidPtr(), latch);
+                   SubscriberStatusCallback(), VoidPtr(), latch);
 }
 
 Publisher ImageTransport::advertise(const std::string& base_topic, uint32_t queue_size,
                                     const SubscriberStatusCallback& connect_cb,
                                     const SubscriberStatusCallback& disconnect_cb,
-                                    const ros::VoidPtr& tracked_object, bool latch)
+                                    const VoidPtr& tracked_object, bool latch)
 {
   return Publisher(impl_->nh_, base_topic, queue_size, connect_cb, disconnect_cb, tracked_object, latch, impl_->pub_loader_);
 }
 
 Subscriber ImageTransport::subscribe(const std::string& base_topic, uint32_t queue_size,
                                      const boost::function<void(const sensor_msgs::ImageConstPtr&)>& callback,
-                                     const ros::VoidPtr& tracked_object, const TransportHints& transport_hints)
+                                     const VoidPtr& tracked_object, const TransportHints& transport_hints)
 {
   return Subscriber(impl_->nh_, base_topic, queue_size, callback, tracked_object, transport_hints, impl_->sub_loader_);
 }
@@ -91,7 +91,7 @@ CameraPublisher ImageTransport::advertiseCamera(const std::string& base_topic, u
   return advertiseCamera(base_topic, queue_size,
                          SubscriberStatusCallback(), SubscriberStatusCallback(),
                          ros::SubscriberStatusCallback(), ros::SubscriberStatusCallback(),
-                         ros::VoidPtr(), latch);
+                         VoidPtr(), latch);
 }
 
 CameraPublisher ImageTransport::advertiseCamera(const std::string& base_topic, uint32_t queue_size,
@@ -99,7 +99,7 @@ CameraPublisher ImageTransport::advertiseCamera(const std::string& base_topic, u
                                                 const SubscriberStatusCallback& image_disconnect_cb,
                                                 const ros::SubscriberStatusCallback& info_connect_cb,
                                                 const ros::SubscriberStatusCallback& info_disconnect_cb,
-                                                const ros::VoidPtr& tracked_object, bool latch)
+                                                const VoidPtr& tracked_object, bool latch)
 {
   return CameraPublisher(*this, impl_->nh_, base_topic, queue_size, image_connect_cb, image_disconnect_cb,
                          info_connect_cb, info_disconnect_cb, tracked_object, latch);
@@ -107,7 +107,7 @@ CameraPublisher ImageTransport::advertiseCamera(const std::string& base_topic, u
 
 CameraSubscriber ImageTransport::subscribeCamera(const std::string& base_topic, uint32_t queue_size,
                                                  const CameraSubscriber::Callback& callback,
-                                                 const ros::VoidPtr& tracked_object,
+                                                 const VoidPtr& tracked_object,
                                                  const TransportHints& transport_hints)
 {
   return CameraSubscriber(*this, impl_->nh_, base_topic, queue_size, callback, tracked_object, transport_hints);
