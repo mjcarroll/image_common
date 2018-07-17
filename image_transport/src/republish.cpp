@@ -56,9 +56,9 @@ int main(int argc, char** argv)
     image_transport::Publisher pub = it.advertise(out_topic, 1);
 
     // Use Publisher::publish as the subscriber callback
-    typedef void (image_transport::Publisher::*PublishMemFn)(const sensor_msgs::ImageConstPtr&) const;
+    typedef void (image_transport::Publisher::*PublishMemFn)(const sensor_msgs::msg::Image::ConstSharedPtr&) const;
     PublishMemFn pub_mem_fn = &image_transport::Publisher::publish;
-    sub = it.subscribe(in_topic, 1, boost::bind(pub_mem_fn, &pub, _1), VoidPtr(), in_transport);
+    sub = it.subscribe(in_topic, 1, boost::bind(pub_mem_fn, &pub, _1), std::shared_ptr<void>(), in_transport);
 
     ros::spin();
   }
@@ -72,10 +72,10 @@ int main(int argc, char** argv)
     std::string lookup_name = Plugin::getLookupName(out_transport);
     boost::shared_ptr<Plugin> pub( loader.createInstance(lookup_name) );
     pub->advertise(nh, out_topic, 1, image_transport::SubscriberStatusCallback(),
-                   image_transport::SubscriberStatusCallback(), VoidPtr(), false);
+                   image_transport::SubscriberStatusCallback(), std::Shared_ptr<void>(), false);
 
     // Use PublisherPlugin::publish as the subscriber callback
-    typedef void (Plugin::*PublishMemFn)(const sensor_msgs::ImageConstPtr&) const;
+    typedef void (Plugin::*PublishMemFn)(const sensor_msgs::msg::Image::ConstSharedPtr&) const;
     PublishMemFn pub_mem_fn = &Plugin::publish;
     sub = it.subscribe(in_topic, 1, boost::bind(pub_mem_fn, pub.get(), _1), pub, in_transport);
 

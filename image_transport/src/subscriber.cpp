@@ -34,6 +34,9 @@
 
 #include "image_transport/subscriber.h"
 #include "image_transport/subscriber_plugin.h"
+
+#include <sensor_msgs/msg/image.hpp>
+
 #include <pluginlib/class_loader.hpp>
 
 namespace image_transport {
@@ -71,8 +74,8 @@ struct Subscriber::Impl
 };
 
 Subscriber::Subscriber(rclcpp::Node::SharedPtr& nh, const std::string& base_topic, uint32_t queue_size,
-                       const std::function<void(const ImageConstPtr&)>& callback,
-                       const VoidPtr& tracked_object, const TransportHints& transport_hints,
+                       const std::function<void(const sensor_msgs::msg::Image::ConstSharedPtr&)>& callback,
+                       const std::shared_ptr<void>& tracked_object, const TransportHints& transport_hints,
                        const SubLoaderPtr& loader)
   : impl_(new Impl)
 {

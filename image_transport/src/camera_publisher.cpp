@@ -75,7 +75,7 @@ CameraPublisher::CameraPublisher(ImageTransport& image_it, ros::NodeHandle& info
                                  const SubscriberStatusCallback& image_disconnect_cb,
                                  const ros::SubscriberStatusCallback& info_connect_cb,
                                  const ros::SubscriberStatusCallback& info_disconnect_cb,
-                                 const VoidPtr& tracked_object, bool latch)
+                                 const std::shared_ptr<void>& tracked_object, bool latch)
   : impl_(new Impl)
 {
   // Explicitly resolve name here so we compute the correct CameraInfo topic when the
@@ -85,7 +85,7 @@ CameraPublisher::CameraPublisher(ImageTransport& image_it, ros::NodeHandle& info
 
   impl_->image_pub_ = image_it.advertise(image_topic, queue_size, image_connect_cb,
                                          image_disconnect_cb, tracked_object, latch);
-  impl_->info_pub_ = info_nh.advertise<sensor_msgs::CameraInfo>(info_topic, queue_size, info_connect_cb,
+  impl_->info_pub_ = info_nh.advertise<sensor_msgs::msg::CameraInfo>(info_topic, queue_size, info_connect_cb,
                                                                 info_disconnect_cb, tracked_object, latch);
 }
 
@@ -108,7 +108,7 @@ std::string CameraPublisher::getInfoTopic() const
   return std::string();
 }
 
-void CameraPublisher::publish(const sensor_msgs::Image& image, const sensor_msgs::CameraInfo& info) const
+void CameraPublisher::publish(const sensor_msgs::msg::Image& image, const sensor_msgs::msg::CameraInfo& info) const
 {
   if (!impl_ || !impl_->isValid()) {
     ROS_ASSERT_MSG(false, "Call to publish() on an invalid image_transport::CameraPublisher");
@@ -119,8 +119,8 @@ void CameraPublisher::publish(const sensor_msgs::Image& image, const sensor_msgs
   impl_->info_pub_.publish(info);
 }
 
-void CameraPublisher::publish(const sensor_msgs::ImageConstPtr& image,
-                              const sensor_msgs::CameraInfoConstPtr& info) const
+void CameraPublisher::publish(const sensor_msgs::msg::Image::ConstSharedPtr& image,
+                              const sensor_msgs::msg::CameraInfo::ConstSharedPtr& info) const
 {
   if (!impl_ || !impl_->isValid()) {
     ROS_ASSERT_MSG(false, "Call to publish() on an invalid image_transport::CameraPublisher");
@@ -131,7 +131,7 @@ void CameraPublisher::publish(const sensor_msgs::ImageConstPtr& image,
   impl_->info_pub_.publish(info);
 }
 
-void CameraPublisher::publish(sensor_msgs::Image& image, sensor_msgs::CameraInfo& info,
+void CameraPublisher::publish(sensor_msgs::msg::Image& image, sensor_msgs::msg::CameraInfo& info,
                               ros::Time stamp) const
 {
   if (!impl_ || !impl_->isValid()) {

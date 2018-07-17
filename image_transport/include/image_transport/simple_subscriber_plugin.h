@@ -36,7 +36,6 @@
 #define IMAGE_TRANSPORT_SIMPLE_SUBSCRIBER_PLUGIN_H
 
 #include "image_transport/subscriber_plugin.h"
-#include <boost/scoped_ptr.hpp>
 
 namespace image_transport {
 
@@ -101,7 +100,7 @@ protected:
   }
 
   virtual void subscribeImpl(ros::NodeHandle& nh, const std::string& base_topic, uint32_t queue_size,
-                             const Callback& callback, const VoidPtr& tracked_object,
+                             const Callback& callback, const std::shared_ptr<void>& tracked_object,
                              const TransportHints& transport_hints)
   {
     // Push each group of transport-specific parameters into a separate sub-namespace

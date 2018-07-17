@@ -38,10 +38,11 @@
 #include <rclcpp/node.hpp>
 #include <rclcpp/macros.hpp>
 
+#include <sensor_msgs/msg/image.hpp>
+
 #include "image_transport/single_subscriber_publisher.h"
 #include "image_transport/exception.h"
 #include "image_transport/loader_fwds.h"
-#include "image_transport/types.h"
 
 namespace image_transport
 {
@@ -84,12 +85,12 @@ public:
   /*!
    * \brief Publish an image on the topics associated with this Publisher.
    */
-  void publish(const Image & message) const;
+  void publish(const sensor_msgs::msg::Image & message) const;
 
   /*!
    * \brief Publish an image on the topics associated with this Publisher.
    */
-  void publish(const ImageConstPtr & message) const;
+  void publish(const sensor_msgs::msg::Image::ConstSharedPtr & message) const;
 
   /*!
    * \brief Shutdown the advertisements associated with this Publisher.
@@ -106,7 +107,7 @@ private:
     rclcpp::Node::SharedPtr & nh, const std::string & base_topic, uint32_t queue_size,
     const SubscriberStatusCallback & connect_cb,
     const SubscriberStatusCallback & disconnect_cb,
-    const VoidPtr & tracked_object, bool latch,
+    const std::shared_ptr<void>& tracked_object, bool latch,
     const PubLoaderPtr & loader);
 
   struct Impl;

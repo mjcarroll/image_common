@@ -36,7 +36,7 @@ protected:
 
 TEST_F(TestPublisher, construction_and_destruction) {
   auto get_num_subscribers = []() -> uint32_t { return 0; };
-  auto publish_fn= [](const image_transport::Image& /*image*/){};
+  auto publish_fn= [](const sensor_msgs::msg::Image& /*image*/){};
 
   image_transport::SingleSubscriberPublisher ssp(caller_id, topic,
       get_num_subscribers, publish_fn);
@@ -46,7 +46,7 @@ TEST_F(TestPublisher, getNumSubscribers) {
   uint32_t nSub = 0;
 
   auto get_num_subscribers = [&nSub]() -> uint32_t { return nSub; };
-  auto publish_fn= [](const image_transport::Image& /*image*/){};
+  auto publish_fn= [](const sensor_msgs::msg::Image& /*image*/){};
 
   image_transport::SingleSubscriberPublisher ssp(caller_id, topic,
       get_num_subscribers, publish_fn);

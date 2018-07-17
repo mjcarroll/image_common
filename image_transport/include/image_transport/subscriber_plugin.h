@@ -35,8 +35,9 @@
 #ifndef IMAGE_TRANSPORT_SUBSCRIBER_PLUGIN_H
 #define IMAGE_TRANSPORT_SUBSCRIBER_PLUGIN_H
 
+#include <rclcpp/macros.hpp>
+
 #include "image_transport/transport_hints.h"
-#include "image_transport/types.h"
 
 namespace image_transport
 {
@@ -50,7 +51,7 @@ private:
   RCLCPP_DISABLE_COPY(SubscriberPlugin)
 
 public:
-  typedef std::function<void (const ImageConstPtr &)> Callback;
+  typedef std::function<void (const sensor_msgs::msg::Image::ConstSharedPtr &)> Callback;
 
   virtual ~SubscriberPlugin() {}
 
@@ -65,7 +66,7 @@ public:
    */
   void subscribe(
     rclcpp::Node::SharedPtr & nh, const std::string & base_topic, uint32_t queue_size,
-    const Callback & callback, const VoidPtr & tracked_object = VoidPtr(),
+    const Callback & callback, const std::shared_ptr<void>& tracked_object = std::shared_ptr<void>(),
     const TransportHints & transport_hints = TransportHints())
   {
     return subscribeImpl(nh, base_topic, queue_size, callback, tracked_object, transport_hints);
@@ -76,12 +77,12 @@ public:
    */
   void subscribe(
     rclcpp::Node::SharedPtr & nh, const std::string & base_topic, uint32_t queue_size,
-    void (*fp)(const ImageConstPtr &),
+    void (*fp)(const sensor_msgs::msg::Image::ConstSharedPtr &),
     const TransportHints & transport_hints = TransportHints())
   {
     return subscribe(nh, base_topic, queue_size,
-             std::function<void(const ImageConstPtr &)>(fp),
-             VoidPtr(), transport_hints);
+             std::function<void(const sensor_msgs::msg::Image::ConstSharedPtr&)>(fp),
+             std::shared_ptr<void>(), transport_hints);
   }
 
   /**
@@ -90,11 +91,11 @@ public:
   template<class T>
   void subscribe(
     rclcpp::Node::SharedPtr & nh, const std::string & base_topic, uint32_t queue_size,
-    void (T::* fp)(const ImageConstPtr &), T * obj,
+    void (T::* fp)(const sensor_msgs::msg::Image::ConstSharedPtr&), T * obj,
     const TransportHints & transport_hints = TransportHints())
   {
     return subscribe(nh, base_topic, queue_size, std::bind(fp, obj, std::placeholders::_1),
-             VoidPtr(), transport_hints);
+             std::shared_ptr<void>(), transport_hints);
   }
 
   /**
@@ -103,7 +104,7 @@ public:
   template<class T>
   void subscribe(
     rclcpp::Node::SharedPtr & nh, const std::string & base_topic, uint32_t queue_size,
-    void (T::* fp)(const ImageConstPtr &),
+    void (T::* fp)(const sensor_msgs::msg::Image::ConstSharedPtr&),
     const std::shared_ptr<T> & obj,
     const TransportHints & transport_hints = TransportHints())
   {
@@ -141,7 +142,7 @@ protected:
    */
   virtual void subscribeImpl(
     rclcpp::Node::SharedPtr & nh, const std::string & base_topic, uint32_t queue_size,
-    const Callback & callback, const VoidPtr & tracked_object,
+    const Callback & callback, const std::shared_ptr<void>& tracked_object,
     const TransportHints & transport_hints) = 0;
 };
 

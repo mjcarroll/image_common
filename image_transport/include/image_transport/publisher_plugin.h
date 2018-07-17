@@ -66,7 +66,7 @@ public:
     bool latch = true)
   {
     advertiseImpl(nh, base_topic, queue_size, SubscriberStatusCallback(),
-      SubscriberStatusCallback(), VoidPtr(), latch);
+      SubscriberStatusCallback(), std::shared_ptr<void>(), latch);
   }
 
   /**
@@ -76,7 +76,7 @@ public:
     rclcpp::Node::SharedPtr & nh, const std::string & base_topic, uint32_t queue_size,
     const SubscriberStatusCallback & connect_cb,
     const SubscriberStatusCallback & disconnect_cb = SubscriberStatusCallback(),
-    const VoidPtr & tracked_object = VoidPtr(), bool latch = true)
+    const std::shared_ptr<void>& tracked_object = std::shared_ptr<void>(), bool latch = true)
   {
     advertiseImpl(nh, base_topic, queue_size, connect_cb, disconnect_cb, tracked_object, latch);
   }
@@ -95,12 +95,12 @@ public:
   /**
    * \brief Publish an image using the transport associated with this PublisherPlugin.
    */
-  virtual void publish(const Image & message) const = 0;
+  virtual void publish(const sensor_msgs::msg::Image & message) const = 0;
 
   /**
    * \brief Publish an image using the transport associated with this PublisherPlugin.
    */
-  virtual void publish(const ImageConstPtr & message) const
+  virtual void publish(const sensor_msgs::msg::Image::ConstSharedPtr & message) const
   {
     publish(*message);
   }
@@ -112,9 +112,9 @@ public:
    * @param message an image message to use information from (but not data)
    * @param data a pointer to the image data to use to fill the Image message
    */
-  virtual void publish(const Image & message, const uint8_t * data) const
+  virtual void publish(const sensor_msgs::msg::Image & message, const uint8_t * data) const
   {
-    Image msg;
+    sensor_msgs::msg::Image msg;
     msg.header = message.header;
     msg.height = message.height;
     msg.width = message.width;
@@ -148,7 +148,7 @@ protected:
     rclcpp::Node::SharedPtr& nh, const std::string & base_topic, uint32_t queue_size,
     const SubscriberStatusCallback & connect_cb,
     const SubscriberStatusCallback & disconnect_cb,
-    const VoidPtr & tracked_object, bool latch) = 0;
+    const std::shared_ptr<void>& tracked_object, bool latch) = 0;
 };
 
 } //namespace image_transport

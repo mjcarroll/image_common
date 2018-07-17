@@ -36,8 +36,8 @@
 #define IMAGE_TRANSPORT_SUBSCRIBER_H
 
 #include <rclcpp/node.hpp>
+#include <sensor_msgs/msg/image.hpp>
 
-#include "image_transport/types.h"
 #include "image_transport/transport_hints.h"
 #include "image_transport/exception.h"
 #include "image_transport/loader_fwds.h"
@@ -94,8 +94,8 @@ public:
 
 private:
   Subscriber(rclcpp::Node::SharedPtr& nh, const std::string& base_topic, uint32_t queue_size,
-             const std::function<void(const ImageConstPtr&)>& callback,
-             const VoidPtr& tracked_object, const TransportHints& transport_hints,
+             const std::function<void(const sensor_msgs::msg::Image::ConstSharedPtr&)>& callback,
+             const std::shared_ptr<void>& tracked_object, const TransportHints& transport_hints,
              const SubLoaderPtr& loader);
 
   struct Impl;

@@ -89,8 +89,8 @@ struct CameraSubscriber::Impl
   }
 
   SubscriberFilter image_sub_;
-  message_filters::Subscriber<sensor_msgs::CameraInfo> info_sub_;
-  message_filters::TimeSynchronizer<sensor_msgs::Image, sensor_msgs::CameraInfo> sync_;
+  message_filters::Subscriber<sensor_msgs::msg::CameraInfo> info_sub_;
+  message_filters::TimeSynchronizer<sensor_msgs::msg::Image, sensor_msgs::msg::CameraInfo> sync_;
   bool unsubscribed_;
   // For detecting when the topics aren't synchronized
   ros::WallTimer check_synced_timer_;
@@ -99,7 +99,7 @@ struct CameraSubscriber::Impl
 
 CameraSubscriber::CameraSubscriber(ImageTransport& image_it, ros::NodeHandle& info_nh,
                                    const std::string& base_topic, uint32_t queue_size,
-                                   const Callback& callback, const VoidPtr& tracked_object,
+                                   const Callback& callback, const std::shared_ptr<void>& tracked_object,
                                    const TransportHints& transport_hints)
   : impl_(new Impl(queue_size))
 {

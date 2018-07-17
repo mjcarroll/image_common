@@ -58,10 +58,10 @@ namespace image_transport {
  * The output connection for the SubscriberFilter object is the same signature as for roscpp
  * subscription callbacks, ie.
 \verbatim
-void callback(const boost::shared_ptr<const sensor_msgs::Image>&);
+void callback(const std::shared_ptr<const sensor_msgs::msg::Image>&);
 \endverbatim
  */
-class SubscriberFilter : public message_filters::SimpleFilter<sensor_msgs::Image>
+class SubscriberFilter : public message_filters::SimpleFilter<sensor_msgs::msg::Image>
 {
 public:
   /**
@@ -108,7 +108,7 @@ public:
     unsubscribe();
 
     sub_ = it.subscribe(base_topic, queue_size, boost::bind(&SubscriberFilter::cb, this, _1),
-                        VoidPtr(), transport_hints);
+                        std::shared_ptr<void>(), transport_hints);
   }
 
   /**
@@ -150,7 +150,7 @@ public:
 
 private:
 
-  void cb(const sensor_msgs::ImageConstPtr& m)
+  void cb(const sensor_msgs::msg::Image::ConstSharedPtr& m)
   {
     signalMessage(m);
   }
