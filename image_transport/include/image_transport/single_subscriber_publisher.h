@@ -37,6 +37,8 @@
 
 #include "image_transport/types.h"
 
+#include "rclcpp/macros.hpp"
+
 #include <functional>
 
 namespace image_transport
