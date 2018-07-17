@@ -62,7 +62,7 @@ void callback(const sensor_msgs::msg::Image::ConstSharedPtr&, const sensor_msgs:
 class CameraSubscriber
 {
 public:
-  typedef boost::function<void(const sensor_msgs::msg::Image::ConstSharedPtr&,
+  typedef std::function<void(const sensor_msgs::msg::Image::ConstSharedPtr&,
                                const sensor_msgs::msg::CameraInfo::ConstSharedPtr&)> Callback;
 
   CameraSubscriber() {}
@@ -105,8 +105,8 @@ private:
                    const TransportHints& transport_hints = TransportHints());
 
   struct Impl;
-  typedef boost::shared_ptr<Impl> ImplPtr;
-  typedef boost::weak_ptr<Impl> ImplWPtr;
+  typedef std::shared_ptr<Impl> ImplPtr;
+  typedef std::weak_ptr<Impl> ImplWPtr;
 
   ImplPtr impl_;
 

@@ -25,9 +25,9 @@ add_library(${PROJECT_NAME}
   src/publisher.cpp
   src/subscriber.cpp
   src/single_subscriber_publisher.cpp
-  #src/camera_publisher.cpp
-  #src/camera_subscriber.cpp
-  #src/image_transport.cpp
+  src/camera_publisher.cpp
+  src/camera_subscriber.cpp
+  src/image_transport.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME}

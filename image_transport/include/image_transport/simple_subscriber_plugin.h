@@ -108,7 +108,7 @@ protected:
     simple_impl_.reset(new SimpleSubscriberPluginImpl(param_nh));
 
     simple_impl_->sub_ = nh.subscribe<M>(getTopicToSubscribe(base_topic), queue_size,
-                                         boost::bind(&SimpleSubscriberPlugin::internalCallback, this, _1, callback),
+                                         std::bind(&SimpleSubscriberPlugin::internalCallback, this, std::placeholders::_1, callback),
                                          tracked_object, transport_hints.getRosHints());
   }
 
@@ -132,7 +132,7 @@ private:
     ros::Subscriber sub_;
   };
 
-  boost::scoped_ptr<SimpleSubscriberPluginImpl> simple_impl_;
+  std::unique_ptr<SimpleSubscriberPluginImpl> simple_impl_;
 };
 
 } //namespace image_transport

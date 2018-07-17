@@ -62,7 +62,7 @@ public:
   virtual std::string getTransportName() const = 0;
 
   /**
-   * \brief Subscribe to an image topic, version for arbitrary boost::function object.
+   * \brief Subscribe to an image topic, version for arbitrary std::function object.
    */
   void subscribe(
     rclcpp::Node::SharedPtr & nh, const std::string & base_topic, uint32_t queue_size,

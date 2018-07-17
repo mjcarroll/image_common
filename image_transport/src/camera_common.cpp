@@ -38,9 +38,10 @@
 #include "rcutils/split.h"
 #include <vector>
 
-namespace image_transport {
+namespace image_transport
+{
 
-std::string getCameraInfoTopic(const std::string& base_topic)
+std::string getCameraInfoTopic(const std::string & base_topic)
 {
   std::string info_topic;
   rcutils_allocator_t allocator = rcutils_get_default_allocator();
@@ -51,7 +52,7 @@ std::string getCameraInfoTopic(const std::string& base_topic)
     fprintf(stderr, rcutils_get_error_string_safe());
   } else {
     if (tokens.size > 0) {
-      for(size_t ii = 0; ii < tokens.size - 1; ++ii) {
+      for (size_t ii = 0; ii < tokens.size - 1; ++ii) {
         info_topic.append("/");
         info_topic.append(tokens.data[ii]);
       }
@@ -59,11 +60,22 @@ std::string getCameraInfoTopic(const std::string& base_topic)
     info_topic += "/camera_info";
   }
 
-  if(rcutils_string_array_fini(&tokens) != RCUTILS_RET_OK) {
+  if (rcutils_string_array_fini(&tokens) != RCUTILS_RET_OK) {
     fprintf(stderr, "Failed to destroy the token string array\n");
   }
 
   return info_topic;
+}
+
+std::string erase_last_copy(const std::string & input, const std::string & search)
+{
+  size_t found = input.rfind(search);
+  auto input_copy = input;
+  if (found != std::string::npos) {
+    input_copy.replace(found, search.length(), "");
+  }
+  return input_copy;
+
 }
 
 } //namespace image_transport

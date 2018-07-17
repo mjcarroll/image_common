@@ -34,10 +34,10 @@
 
 #include "image_transport/publisher.h"
 #include "image_transport/publisher_plugin.h"
+#include "image_transport/camera_common.h"
 
 #include <rclcpp/node.hpp>
 #include <pluginlib/class_loader.hpp>
-#include <boost/algorithm/string/erase.hpp>
 
 namespace image_transport
 {
@@ -125,7 +125,7 @@ Publisher::Publisher(
   }
 
   for (const auto & lookup_name: loader->getDeclaredClasses()) {
-    const std::string transport_name = boost::erase_last_copy(lookup_name, "_pub");
+    const std::string transport_name = erase_last_copy(lookup_name, "_pub");
     if (blacklist.count(transport_name)) {
       continue;
     }

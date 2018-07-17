@@ -69,10 +69,10 @@ public:
                       const std::shared_ptr<void>& tracked_object = std::shared_ptr<void>(), bool latch = false);
 
   /**
-   * \brief Subscribe to an image topic, version for arbitrary boost::function object.
+   * \brief Subscribe to an image topic, version for arbitrary std::function object.
    */
   Subscriber subscribe(const std::string& base_topic, uint32_t queue_size,
-                       const boost::function<void(const sensor_msgs::msg::Image::ConstSharedPtr&)>& callback,
+                       const std::function<void(const sensor_msgs::msg::Image::ConstSharedPtr&)>& callback,
                        const std::shared_ptr<void>& tracked_object = std::shared_ptr<void>(),
                        const TransportHints& transport_hints = TransportHints());
 
@@ -84,7 +84,7 @@ public:
                        const TransportHints& transport_hints = TransportHints())
   {
     return subscribe(base_topic, queue_size,
-                     boost::function<void(const sensor_msgs::msg::Image::ConstSharedPtr&)>(fp),
+                     std::function<void(const sensor_msgs::msg::Image::ConstSharedPtr&)>(fp),
                      std::shared_ptr<void>(), transport_hints);
   }
 
@@ -96,7 +96,7 @@ public:
                        void(T::*fp)(const sensor_msgs::msg::Image::ConstSharedPtr&), T* obj,
                        const TransportHints& transport_hints = TransportHints())
   {
-    return subscribe(base_topic, queue_size, boost::bind(fp, obj, _1), std::shared_ptr<void>(), transport_hints);
+    return subscribe(base_topic, queue_size, std::bind(fp, obj, std::placeholders::_1), std::shared_ptr<void>(), transport_hints);
   }
 
   /**
@@ -105,10 +105,10 @@ public:
   template<class T>
   Subscriber subscribe(const std::string& base_topic, uint32_t queue_size,
                        void(T::*fp)(const sensor_msgs::msg::Image::ConstSharedPtr&),
-                       const boost::shared_ptr<T>& obj,
+                       const std::shared_ptr<T>& obj,
                        const TransportHints& transport_hints = TransportHints())
   {
-    return subscribe(base_topic, queue_size, boost::bind(fp, obj.get(), _1), obj, transport_hints);
+    return subscribe(base_topic, queue_size, std::bind(fp, obj.get(), std::placeholder::_1), obj, transport_hints);
   }
 
   /*!
@@ -129,7 +129,7 @@ public:
 
   /**
    * \brief Subscribe to a synchronized image & camera info topic pair, version for arbitrary
-   * boost::function object.
+   * std::function object.
    *
    * This version assumes the standard topic naming scheme, where the info topic is
    * named "camera_info" in the same namespace as the base image topic.
@@ -161,7 +161,7 @@ public:
                                                 const sensor_msgs::msg::CameraInfo::ConstSharedPtr&), T* obj,
                                    const TransportHints& transport_hints = TransportHints())
   {
-    return subscribeCamera(base_topic, queue_size, boost::bind(fp, obj, _1, _2), std::shared_ptr<void>(),
+    return subscribeCamera(base_topic, queue_size, std::bind(fp, obj, std::placeholders::_1, std::placeholders::_2), std::shared_ptr<void>(),
                            transport_hints);
   }
 
@@ -173,10 +173,10 @@ public:
   CameraSubscriber subscribeCamera(const std::string& base_topic, uint32_t queue_size,
                                    void(T::*fp)(const sensor_msgs::msg::Image::ConstSharedPtr&,
                                                 const sensor_msgs::msg::CameraInfo::ConstSharedPtr&),
-                                   const boost::shared_ptr<T>& obj,
+                                   const std::shared_ptr<T>& obj,
                                    const TransportHints& transport_hints = TransportHints())
   {
-    return subscribeCamera(base_topic, queue_size, boost::bind(fp, obj.get(), _1, _2), obj,
+    return subscribeCamera(base_topic, queue_size, std::bind(fp, obj.get(), std::placeholders::_1, std::placeholders::_2), obj,
                            transport_hints);
   }
 
@@ -193,8 +193,8 @@ public:
 
 private:
   struct Impl;
-  typedef boost::shared_ptr<Impl> ImplPtr;
-  typedef boost::weak_ptr<Impl> ImplWPtr;
+  typedef std::shared_ptr<Impl> ImplPtr;
+  typedef std::weak_ptr<Impl> ImplWPtr;
 
   ImplPtr impl_;
 };

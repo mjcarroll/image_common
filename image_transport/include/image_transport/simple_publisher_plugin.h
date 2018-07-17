@@ -106,7 +106,7 @@ protected:
   }
 
   //! Generic function for publishing the internal message type.
-  typedef boost::function<void(const M&)> PublishFn;
+  typedef std::function<void(const M&)> PublishFn;
 
   /**
    * \brief Publish an image using the specified publish function. Must be implemented by
@@ -174,7 +174,7 @@ private:
     ros::Publisher pub_;
   };
 
-  boost::scoped_ptr<SimplePublisherPluginImpl> simple_impl_;
+  std::unique_ptr<SimplePublisherPluginImpl> simple_impl_;
 
   typedef void (SimplePublisherPlugin::*SubscriberStatusMemFn)(const ros::SingleSubscriberPublisher& pub);
 
@@ -185,9 +185,9 @@ private:
   ros::SubscriberStatusCallback bindCB(const SubscriberStatusCallback& user_cb,
                                        SubscriberStatusMemFn internal_cb_fn)
   {
-    ros::SubscriberStatusCallback internal_cb = boost::bind(internal_cb_fn, this, _1);
+    ros::SubscriberStatusCallback internal_cb = std::bind(internal_cb_fn, this, std::placeholders::_1);
     if (user_cb)
-      return boost::bind(&SimplePublisherPlugin::subscriberCB, this, _1, user_cb, internal_cb);
+      return std::bind(&SimplePublisherPlugin::subscriberCB, this, std::placeholders::_1, user_cb, internal_cb);
     else
       return internal_cb;
   }
@@ -209,15 +209,15 @@ private:
     // messages of the transport-specific type.
     typedef void (SimplePublisherPlugin::*PublishMemFn)(const sensor_msgs::msg::Image&, const PublishFn&) const;
     PublishMemFn pub_mem_fn = &SimplePublisherPlugin::publish;
-    ImagePublishFn image_publish_fn = boost::bind(pub_mem_fn, this, _1, bindInternalPublisher(ros_ssp));
+    ImagePublishFn image_publish_fn = std::bind(pub_mem_fn, this, std::placeholders::_1, bindInternalPublisher(ros_ssp));
 
     SingleSubscriberPublisher ssp(ros_ssp.getSubscriberName(), getTopic(),
-                                  boost::bind(&SimplePublisherPlugin::getNumSubscribers, this),
+                                  std::bind(&SimplePublisherPlugin::getNumSubscribers, this),
                                   image_publish_fn);
     user_cb(ssp);
   }
 
-  typedef boost::function<void(const sensor_msgs::msg::Image&)> ImagePublishFn;
+  typedef std::function<void(const sensor_msgs::msg::Image&)> ImagePublishFn;
 
   /**
    * Returns a function object for publishing the transport-specific message type
@@ -231,7 +231,7 @@ private:
     // Bind PubT::publish(const Message&) as PublishFn
     typedef void (PubT::*InternalPublishMemFn)(const M&) const;
     InternalPublishMemFn internal_pub_mem_fn = &PubT::publish;
-    return boost::bind(internal_pub_mem_fn, &pub, _1);
+    return std::bind(internal_pub_mem_fn, &pub, std::placeholders::_1);
   }
 };
 
