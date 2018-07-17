@@ -34,9 +34,7 @@
 
 #include "image_transport/subscriber.h"
 #include "image_transport/subscriber_plugin.h"
-#include <ros/names.h>
-#include <pluginlib/class_loader.h>
-#include <boost/scoped_ptr.hpp>
+#include <pluginlib/class_loader.hpp>
 
 namespace image_transport {
 
@@ -67,13 +65,13 @@ struct Subscriber::Impl
   }
 
   SubLoaderPtr loader_;
-  boost::shared_ptr<SubscriberPlugin> subscriber_;
+  std::shared_ptr<SubscriberPlugin> subscriber_;
   bool unsubscribed_;
   //double constructed_;
 };
 
-Subscriber::Subscriber(ros::NodeHandle& nh, const std::string& base_topic, uint32_t queue_size,
-                       const boost::function<void(const sensor_msgs::ImageConstPtr&)>& callback,
+Subscriber::Subscriber(rclcpp::Node::SharedPtr& nh, const std::string& base_topic, uint32_t queue_size,
+                       const std::function<void(const ImageConstPtr&)>& callback,
                        const VoidPtr& tracked_object, const TransportHints& transport_hints,
                        const SubLoaderPtr& loader)
   : impl_(new Impl)
@@ -81,7 +79,7 @@ Subscriber::Subscriber(ros::NodeHandle& nh, const std::string& base_topic, uint3
   // Load the plugin for the chosen transport.
   std::string lookup_name = SubscriberPlugin::getLookupName(transport_hints.getTransport());
   try {
-    impl_->subscriber_ = loader->createInstance(lookup_name);
+    impl_->subscriber_ = loader->createSharedInstance(lookup_name);
   }
   catch (pluginlib::PluginlibException& e) {
     throw TransportLoadException(transport_hints.getTransport(), e.what());
@@ -90,7 +88,10 @@ Subscriber::Subscriber(ros::NodeHandle& nh, const std::string& base_topic, uint3
   impl_->loader_ = loader;
 
   // Try to catch if user passed in a transport-specific topic as base_topic.
-  std::string clean_topic = ros::names::clean(base_topic);
+  // TODO(ros2) use rclcpp to clean
+  //std::string clean_topic = ros::names::clean(base_topic);
+  std::string clean_topic = base_topic;
+
   size_t found = clean_topic.rfind('/');
   if (found != std::string::npos) {
     std::string transport = clean_topic.substr(found+1);
@@ -98,12 +99,15 @@ Subscriber::Subscriber(ros::NodeHandle& nh, const std::string& base_topic, uint3
     std::vector<std::string> plugins = loader->getDeclaredClasses();
     if (std::find(plugins.begin(), plugins.end(), plugin_name) != plugins.end()) {
       std::string real_base_topic = clean_topic.substr(0, found);
+
+      /* TODO(ros2) change to new logging.
       ROS_WARN("[image_transport] It looks like you are trying to subscribe directly to a "
                "transport-specific image topic '%s', in which case you will likely get a connection "
                "error. Try subscribing to the base topic '%s' instead with parameter ~image_transport "
                "set to '%s' (on the command line, _image_transport:=%s). "
                "See http://ros.org/wiki/image_transport for details.",
                clean_topic.c_str(), real_base_topic.c_str(), transport.c_str(), transport.c_str());
+               */
     }
   }
 

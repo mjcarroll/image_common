@@ -37,7 +37,10 @@
 
 #include "image_transport/types.h"
 
-namespace image_transport {
+#include <functional>
+
+namespace image_transport
+{
 
 /**
  * \brief Allows publication of an image to a single subscriber. Only available inside
@@ -46,15 +49,16 @@ namespace image_transport {
 class SingleSubscriberPublisher
 {
 private:
-  RCLCPP_DISABLE_COPY(SingleSubscriberPublisher);
+  RCLCPP_DISABLE_COPY(SingleSubscriberPublisher)
 
 public:
   typedef std::function<uint32_t()> GetNumSubscribersFn;
-  typedef std::function<void(const Image&)> PublishFn;
+  typedef std::function<void (const Image &)> PublishFn;
 
-  SingleSubscriberPublisher(const std::string& caller_id, const std::string& topic,
-                            const GetNumSubscribersFn& num_subscribers_fn,
-                            const PublishFn& publish_fn);
+  SingleSubscriberPublisher(
+    const std::string & caller_id, const std::string & topic,
+    const GetNumSubscribersFn & num_subscribers_fn,
+    const PublishFn & publish_fn);
 
   std::string getSubscriberName() const;
 
@@ -62,8 +66,8 @@ public:
 
   uint32_t getNumSubscribers() const;
 
-  void publish(const Image& message) const;
-  void publish(const ImageConstPtr& message) const;
+  void publish(const Image & message) const;
+  void publish(const ImageConstPtr & message) const;
 
 private:
   std::string caller_id_;
@@ -74,7 +78,7 @@ private:
   friend class Publisher; // to get publish_fn_ directly
 };
 
-typedef std::function<void(const SingleSubscriberPublisher&)> SubscriberStatusCallback;
+typedef std::function<void (const SingleSubscriberPublisher &)> SubscriberStatusCallback;
 
 } //namespace image_transport
 

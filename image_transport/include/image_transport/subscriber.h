@@ -35,8 +35,9 @@
 #ifndef IMAGE_TRANSPORT_SUBSCRIBER_H
 #define IMAGE_TRANSPORT_SUBSCRIBER_H
 
-#include <ros/ros.h>
-#include <sensor_msgs/Image.h>
+#include <rclcpp/node.hpp>
+
+#include "image_transport/types.h"
 #include "image_transport/transport_hints.h"
 #include "image_transport/exception.h"
 #include "image_transport/loader_fwds.h"
@@ -92,16 +93,16 @@ public:
   bool operator==(const Subscriber& rhs) const { return impl_ == rhs.impl_; }
 
 private:
-  Subscriber(ros::NodeHandle& nh, const std::string& base_topic, uint32_t queue_size,
-             const boost::function<void(const sensor_msgs::ImageConstPtr&)>& callback,
+  Subscriber(rclcpp::Node::SharedPtr& nh, const std::string& base_topic, uint32_t queue_size,
+             const std::function<void(const ImageConstPtr&)>& callback,
              const VoidPtr& tracked_object, const TransportHints& transport_hints,
              const SubLoaderPtr& loader);
 
   struct Impl;
-  typedef boost::shared_ptr<Impl> ImplPtr;
-  typedef boost::weak_ptr<Impl> ImplWPtr;
+  typedef std::shared_ptr<Impl> ImplSharedPtr;
+  typedef std::weak_ptr<Impl> ImplWeakPtr;
 
-  ImplPtr impl_;
+  ImplSharedPtr impl_;
 
   friend class ImageTransport;
 };
